@@ -13,9 +13,6 @@ class Command(BaseCommand):
         # some default generated groups
         super_group = Group.objects.create(name='Super Admin')
         admin_group = Group.objects.create(name='Admin')
-        coordinator_group = Group.objects.create(name='Co ordinator')
-        expert_group = Group.objects.create(name='Expert Member')
-        student_group = Group.objects.create(name='Student')
 
         #permission to each group
         super_permissions = Permission.objects.all()

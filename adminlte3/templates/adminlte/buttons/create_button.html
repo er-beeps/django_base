@@ -1,33 +1,5 @@
 {% load custom_tags %}
 {% create_list 'add' slug as mylist %}
 {% if request.user|check_permission:mylist %}
-
-    {%if slug == 'expert' %}
-    <a href="{% url request.resolver_match.app_name|add:':expert_create' slug %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-
-     {%elif slug == 'exam_committee' %}
-    <a href="{% url 'examination:exam_committee_create' pid %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-   
-    {%elif slug == 'student_grade' %}
-    <a href="{% url 'examination:student_grade_create' %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-   
-    {%elif slug == 'course' %}
-    <a href="{% url 'course:course_create'%}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-    
-    {% comment %} {%elif slug == 'enrollment_course' %}
-    <a href="{% url 'course:student_enrollment_create'%}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a> {% endcomment %}
-    
-    {%elif slug == 'evaluation_scheme' %}
-    <a href="{% url 'master:evaluation_scheme_create' pid %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-
-    {% comment %}
-
-    {%elif slug == 'exam_evaluation' %}
-    <a href="{% url 'examination:exam_evaluation_create'%}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a> {% endcomment %}
-
-    {%else%}
-        {% if slug|unless_exists:"exam_schedule,exam_evaluation,exam_grade,course,enrollment_course" %}
-            <a href="{% url request.resolver_match.app_name|add:':crud_create' slug %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
-        {%endif%}
-    {%endif%}
+    <a href="{% url request.resolver_match.app_name|add:':crud_create' slug %}" class="btn btn-sm btn-success ml-3 p-0 pl-1 pr-1"><i class="fa fa-plus"></i>  New</a>
 {% endif %}	

@@ -23,7 +23,7 @@
 {% block content %}
 <div class="container-fluid card">
     <div class="p-3 pb-4">
-            <form enctype="multipart/form-data" name="edit_form" action="{% url request.resolver_match.app_name|add:':crud_update' slug entry.id %}" method="POST" id="{{ slug|add:"_form" }}" autocomplete="off" >
+            <form enctype="multipart/form-data" name="edit_form" action="{% url request.resolver_match.app_name|add:':crud_update' slug entry.id %}" method="POST" id="{{ slug|add:'_form' }}" autocomplete="off" >
             {% csrf_token %}
             <input type="hidden" value="{{entry.id}}" id="entry_id">
 
@@ -33,9 +33,6 @@
                             {{ field|as_crispy_field }}
                         </div>
                 {% endfor %}
-                {% if slug == 'evaluation_scheme' %}
-                    {% include './partial/subject/subject_evaluation_exam_type.html' %}
-                {% endif %}
                 {% if slug == 'group' %}
                     {% include 'widgets/custom_checkbox_select.html' %}
                 {% endif %}

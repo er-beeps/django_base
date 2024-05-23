@@ -26,41 +26,11 @@
           {% if request.user|check_permission:mylist %}
             {% include '../buttons/create_button.html' %}
           {%endif%}
-
-          {%if slug == 'exam_application' %}
-          <hr/>
-          <div>
-            {%include '../lib/exam_application_tab.html'%}
-          </div>
-          {%endif%}
-
-          {%if slug == 'evaluation_scheme' %}
-            <a href="{% url 'master:clone_evaluation_scheme' pid %}" class="btn btn-sm btn-primary ml-5 p-0 pl-1 pr-2"><i class="fa fa-copy"></i>  Clone Scheme</a>
-          {%endif %}
-
+    
           {% if upload_button %}
             {% include '../buttons/upload_button.html' %}
           {%  endif %}
       </h4>
-      {%if pid %}
-        {%if category == 'exam'%}
-        <div class="row subject-exam-type">
-          <div class="col">
-            <h6>APPLICATION:<span class="text-primary"> {{application}}</span></h6>
-            <h6>RESEARCH TITLE: <span class="text-primary"> {{application.research_title}}</span></h6>
-          </div>
-          <div class="col">
-            <h6>SUBJECT: <span class="text-primary">{{application.research_subject}}</span></h6>
-            <h6>EXAM TYPE: <span class="text-primary">{{application.exam_type}}</span></h6>
-          </div>
-        </div>
-
-        {%endif%}
-        {%if category == 'subject'%}
-          <h6>SUBJECT:<span class="text-primary"> {{subject}}</span></h6>
-        {%endif%}
-          <h5>{% include '../buttons/back_button.html' %}</h5>
-      {%endif%}
     </div>
 
 {% endblock %}
@@ -104,29 +74,13 @@
   <script>
     $(document).ready(function() {
       let slug = "{{ slug }}";
-      let pid = "{{pid}}";
       let page_num = "{{ page_num }}";
       param = {
         'page':page_num,
       }
-
       // Create a URLSearchParams object
       var url = new URL(window.location.href);
 
-      // Get the value of the 'status' parameter
-      if(slug == 'exam_application'){
-        var statusParam = url.searchParams.get('status');
-
-        if(statusParam){
-          param['status'] =statusParam;
-        }
-      }
-      
-      // Check if application_id is not an empty string
-      if (pid !== '') {
-        // Append application_id to the param object
-        param['pid'] = pid;
-      }
       if(slug !== ''){
         loadDatatableList(slug,param);
       }

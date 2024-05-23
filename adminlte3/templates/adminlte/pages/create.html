@@ -12,30 +12,12 @@
         </h3>
     </div>
   </div>
-  {%if pid %}
-        {%if category == 'exam'%}
-        <div class="row subject-exam-type">
-            <div class="col">
-              <h6>APPLICATION:<span class="text-primary"> {{application}}</span></h6>
-              <h6>RESEARCH TITLE: <span class="text-primary"> {{application.research_title}}</span></h6>
-            </div>
-            <div class="col">
-              <h6>SUBJECT: <span class="text-primary">{{application.research_subject}}</span></h6>
-              <h6>EXAM TYPE: <span class="text-primary">{{application.exam_type}}</span></h6>
-            </div>
-          </div>
-        {%endif%}
-        {%if category == 'subject'%}
-          <h6>SUBJECT:<span class="text-primary"> {{subject}}</span></h6>
-        {%endif%}
-
-      {%endif%}
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid card">
     <div class="p-3 pb-4">
-        <form enctype="multipart/form-data" name="create_form" action="{% url request.resolver_match.app_name|add:':crud_create' slug %}" method="POST" id="{{ slug|add:"_form" }}" autocomplete="off" >
+        <form enctype="multipart/form-data" name="create_form" action="{% url request.resolver_match.app_name|add:':crud_create' slug %}" method="POST" id="{{ slug|add:'_form' }}" autocomplete="off" >
             {% csrf_token %}
             <div class="row">
                 {% for field in form %}

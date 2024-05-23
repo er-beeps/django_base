@@ -1,10 +1,7 @@
 {% load custom_tags %}
 {% create_list 'delete' slug as mylist %}
     {% if request.user|check_permission:mylist %}
-
-        {% if slug not in "exam_schedule,exam_evaluation,exam_grade" %}
-            <a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{% url request.resolver_match.app_name|add:':crud_delete' slug id %}" class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip title="Delete"><i class="fa fa-trash" style="font-size:0.70rem"></i></a>
-         {%endif%}   
+        <a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{% url request.resolver_match.app_name|add:':crud_delete' slug id %}" class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip title="Delete"><i class="fa fa-trash" style="font-size:0.70rem"></i></a>
 {%endif%}
 
 

@@ -35,9 +35,6 @@
                         {% endif %}
                     {% endfor %}
                     <td class="text-right left-border-lightgray">
-                        
-                        {% include './extra_buttons.html' with slug=slug item=item %}
-
                         {% include '../../buttons/edit_button.html' with slug=slug id=item.id %}
                         {% include '../../buttons/delete_button.html' with slug=slug id=item.id %}
                     </td>
