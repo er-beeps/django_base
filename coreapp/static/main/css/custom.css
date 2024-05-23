@@ -1,0 +1,238 @@
+.asteriskField{
+    margin-left:4px;
+    color: red;
+}
+
+.login-box-msg{
+  padding: 5px !important;
+}
+#crudTable thead th{
+    background-color:lightgrey
+}
+
+.left-border-lightgray{
+    border-left: 1px solid lightgray
+}
+.right-border-lightgray{
+    border-right: 1px solid lightgray
+}
+
+.width-50{
+    width:50px;
+}
+.width-100{
+    width:100px;
+}
+
+.show-btn {
+    margin-left: 2px;
+    padding: 0px 5px;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid lightblue;
+    background-color: #055d78;
+  }
+
+
+.edit-btn {
+    padding: 0px 1px 0px 3px;
+    border-radius: 3px;
+    margin-right:5px;
+}
+.delete-btn {
+    padding: 0px 2px 0px 2px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin-left:5px;
+
+}
+
+.modal-backdrop {
+    z-index: -1;
+  }
+
+.fancybox-content {
+    width: 90% !important
+}
+
+div#ndp-nepali-box{
+    display:block;
+    z-index:99999 !important;
+}
+
+.hr-line{
+    padding:0;
+    margin:0;
+}
+
+/* css for errors */
+
+.errorlist{
+    background-color: #dc3545 !important;
+    border-color: #d32535 !important;
+    color:white !important;
+    padding: 2px;
+    margin: 0px !important;
+    padding-left: 7%;
+}
+
+div.dataTables_wrapper div.dataTables_paginate ul.pagination{
+    margin-top:20px !important;
+}
+.pagination>li>a{
+    border-radius: 7px;
+}
+.page-item{
+    cursor: pointer;
+}
+.page-link{
+    line-height: .9rem;
+}
+.page-item.disabled .page-link{
+    color:black !important;
+    background-color: rgb(230, 227, 227) !important;
+  }
+.page-item.active .page-link{
+background-color: #007bff!important;
+color:white !important;
+font-weight: bold;
+}
+
+
+.main-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .main-sidebar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .text-darkgreen{
+    color:rgb(19, 123, 19) !important;
+  }
+  .text-darkblue{
+    color:darkblue !important;
+  }
+
+  .w-100{
+    width: 100% !important;
+  }
+  .w-50{
+    width:50% !important;
+  }
+
+.bg-tablehead{
+  background: gainsboro !important
+}
+
+.form-control{
+  height: calc(2.0rem + 2px);
+}
+
+.select2-container{
+  height:calc(2.0rem + 2px);
+}
+.select2-container--default .select2-selection--single{
+  height:calc(2.0rem + 2px) !important;
+}
+.select2-container .select2-selection--single .select2-selection__rendered{
+  padding-left: 0px;
+}
+
+
+
+
+/* for notification css */
+
+.noty_theme__mint.noty_type__success {
+    background-color: green !important;
+    border-bottom: 1px solid green !important;
+    color: #fff !important;
+}
+
+.noty_theme__mint.noty_bar .noty_body {
+    padding: 10px !important;
+    font-size: 16px !important;
+}
+
+.noty_effects_open {
+    opacity: 0;
+    transform: translate(50%);
+    animation: noty_anim_in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .noty_effects_close {
+    animation: noty_anim_out 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+} 
+.form-control[readonly]{
+    background-color: ghostwhite !important;
+}  
+
+.form-small-input{
+    height: 30px !important;
+    font-size: 15px;
+    color:black;
+}
+
+input[id^="id_faculty_institutes_"] {
+    margin: 5px !important;
+}
+
+label[for^="id_faculty_institutes_"]{
+    margin-right:30px !important;
+
+}
+
+  
+  @keyframes noty_anim_in {
+    100% {
+      transform: translate(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes noty_anim_out {
+    100% {
+      transform: translate(50%);
+      opacity: 0;
+    }
+}
+
+.subject-exam-type {
+  display: flex;
+  justify-content: space-between;
+}
+
+.subject-exam-type div {
+  flex: 1;
+}
+
+/* /custom field/ */
+
+.ms-3{
+  margin-left:15px !important;
+}
+.ms-5{
+  margin-left:30px !important;
+}
+.ms-7{
+  margin-left:45px !important;
+}
+.ms-9{
+  margin-left:60px !important;
+}
+
+.swal2-container.swal2-backdrop-show, .swal2-container.swal2-noanimation {
+  backdrop-filter: blur(3px);
+}
+.swal-zindex{
+  z-index:999999999 !important;
+}

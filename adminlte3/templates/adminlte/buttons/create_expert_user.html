@@ -1,0 +1,70 @@
+
+<a data-route="{% url 'master:create_expert_user' expert_row_id=id %}" href="javascript:;" onclick="createExpertUser(this)" class="btn btn-sm btn-secondary ml-3 p-0 pl-1 pr-1 mr-3" style="font-size:0.7rem !important;" tooltip title="Create user account for expert"><i class="fa fa-user"></i> Create</a>
+
+
+{% block extra_js %}
+<script>
+
+    function createExpertUser(item){
+        let route=$(item).data('route');
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success ml-5',
+                cancelButton: 'btn btn-secondary mr-5'
+            },
+            buttonsStyling: false
+            });
+
+		swalWithBootstrapButtons.fire({
+		    title: "Confirm",
+		    text: "Are you sure you want to create user for the expert ?",
+		    icon: "info",
+		    showCancelButton: true,
+            confirmButtonText: 'Confirm',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+		}).then((result) => {
+            if(result.value){
+                $.ajax({
+                    url:route,
+                    method:'GET',
+                    success:function(response){
+                        if(response.status == 'success'){
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: '<h5>Successfully created user for expert !!</h5>',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+
+                           setTimeout(()=>{
+                            location.reload()
+                           },1500) 
+                        }else{
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'error',
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+                        }
+                    },
+                    error:function(){
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'An error occured !',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    }
+                })
+            }
+        });
+
+    }
+</script>
+{%endblock%}

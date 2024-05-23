@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-md-6">
+        <form class="uploadform" method='POST' action="{% url request.resolver_match.app_name|add:':upload_file' slug %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>              
+                <b>Select file :</b> <input type='file' name='file'  class='form-control' required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" ><br>
+            </div>
+            {% comment %} <button type="button" class="btn btn-sm btn-success mr-2" id="form_submit_button" onclick="save_data()"><span class="fa fa-save"></span>Upload </button>
+            <button type="button" class="btn btn-danger" onclick="$.fancybox.close()">Cancel</button> {% endcomment %}
+            {% include 'adminlte/buttons/save_and_cancel_button.html' with fancybox=True %}
+          
+        </form>
+    </div>
+</div>

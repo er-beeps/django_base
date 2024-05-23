@@ -1,0 +1,32 @@
+{% load static custom_tags %}
+
+{% for subdirectory in directory.directories %}
+    {% if subdirectory.directories %}
+        <li 
+            id="collapse{{directory.id}}" 
+            class="ms-{{depth}} collapse show"
+        >
+            <i class="fas fa-folder-plus"></i>
+            <a class="text-md" 
+                data-bs-toggle="collapse" 
+                href="#collapse{{subdirectory.id}}" 
+                role="button" 
+                aria-expanded="false" 
+                aria-controls="collapse{{subdirectory.id}}"
+                onclick="toggleCollapse('{{subdirectory.id}}')"
+                {% comment %} onclick="window.location.href = '{% url 'file_manager' subdirectory.path|encoded_path %}';" {% endcomment %}
+            >
+                {{ subdirectory.name }}
+            </a>
+        </li>
+        {% include 'adminlte/pages/partial/subdirectories.html' with directory=subdirectory depth=depth|add:"2" %}
+    {% else %}
+        <li 
+            id="collapse{{directory.id}}" 
+            class="ms-{{depth}} collapse show"
+        >
+            <i class="fas fa-folder-open"></i>
+            <a class="text-md" href="{% url 'file_manager' subdirectory.path|encoded_path %}">{{ subdirectory.name }}</a>
+        </li>
+    {% endif %}
+{% endfor %}

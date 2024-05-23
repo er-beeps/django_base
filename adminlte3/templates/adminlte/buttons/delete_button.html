@@ -1,0 +1,88 @@
+{% load custom_tags %}
+{% create_list 'delete' slug as mylist %}
+    {% if request.user|check_permission:mylist %}
+
+        {% if slug not in "exam_schedule,exam_evaluation,exam_grade" %}
+            <a href="javascript:void(0)" onclick="deleteEntry(this)" data-route="{% url request.resolver_match.app_name|add:':crud_delete' slug id %}" class="btn btn-sm btn-danger delete-btn" data-button-type="delete" tooltip title="Delete"><i class="fa fa-trash" style="font-size:0.70rem"></i></a>
+         {%endif%}   
+{%endif%}
+
+
+{% block extra_js %}
+<script>
+	  function deleteEntry(button) {
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-danger ml-5',
+                cancelButton: 'btn btn-secondary mr-5'
+            },
+            buttonsStyling: false
+            });
+
+		// ask for confirmation before deleting an item
+		// e.preventDefault();
+		var button = $(button);
+		var route = button.attr('data-route');
+		var row = $("#crudTable a[data-route='"+route+"']").closest('tr');
+
+		swalWithBootstrapButtons.fire({
+		    title: "Warning",
+		    text: "Are you sure you want to delete this item?",
+		    icon: "warning",
+		    showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, keep it',
+            reverseButtons: true
+		}).then((result) => {
+            if (result.value) {
+                $.ajax({
+			        url: route,
+                    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+                    success: function(result) {
+                        if (result.value != 1) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'warning',
+                                title: 'Your item is safe !',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+
+                        } else {
+                            // Show a success message
+                            Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'Your item has been deleted !',
+                                showConfirmButton: false,
+                                timer: 1000
+                            })
+                           location.reload() 
+
+                          {% comment %} loadDatatableList(result.slug)   {% endcomment %}
+                        }
+                    },
+                    error: function(result) {
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'warning',
+                            title: 'Your item is safe !',
+                            showConfirmButton: false,
+                            timer: 1000
+                        })
+                    }
+			    });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'warning',
+                    title: 'Your item is safe !',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+            }
+        })
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% load static custom_tags %}
+
+<div class="row mb-2">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs flex-column flex-sm-row mt-2" id="myTab" role="tablist">
+            {% for link in links %}
+                {% if link.href == request.path_info %}
+                    {% with activeClass="active" %}
+                    <li role="presentation" class="nav-item border border-white">
+                        <a class="nav-link tab-link active {{ activeClass }} p-1 pr-2 pl-2" 
+                        href="{{ link.href }}" role="tab">{{ link.label }}</a>
+                    </li>
+                    {%endwith%}
+                {% else %}
+                    <li role="presentation" class="nav-item border border-white">
+                        <a class="nav-link tab-link bg-lightblue text-white  p-1 pr-2 pl-2" 
+                        href="{{ link.href }}" role="tab">{{ link.label }}</a>
+                    </li>
+                {%endif%}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<hr style="border:1px solid lightgray; width:100%">
+  
+<style>
+    .nav-tabs .nav-link.active{
+      color:#da4040 !important;
+      font-weight:550 !important;
+      border-color: rgba(241, 241, 241, 0.66) !important;
+      border-bottom: 3px solid #467fcf !important;
+    }
+  </style>

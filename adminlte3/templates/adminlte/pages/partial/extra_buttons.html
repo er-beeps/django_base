@@ -1,0 +1,26 @@
+{% load custom_tags %}
+
+{% if slug == 'exam_committee'%}
+        {% include '../../buttons/exam_committee_button.html' with id=item.id %}
+{% elif slug == 'exam_schedule'%}
+    {% include '../../buttons/exam_committee_schedule.html' with id=item.id %}
+{% elif slug == 'expert'%}
+    {% if item.id|checkUser %}
+        {% include '../../buttons/create_expert_user.html' with id=item.id %}
+    {%endif%}
+{% elif slug == 'user'%}
+    {% include '../../buttons/send_user_reg_mail.html' with id=item.id %}
+    
+{% elif slug == 'student_grade' %}
+    {% include '../../buttons/student_evaluation_report.html' with id=item.id grade_type='final' %}
+{% elif slug == 'exam_grade' %}
+    {% include '../../buttons/student_evaluation_report.html' with id=item.id grade_type='individual' %}
+{% elif slug == 'assign_course_subject' %}
+    {%if user|has_group:"Expert Member" %}
+        <a target="_blank" href="{% url request.resolver_match.app_name|add:':generate_tor' item.id %}" class="btn btn-sm btn-light text-darkblue edit-btn" tooltip title="Generate TOR"><i class="fa fa-book pr-1" style="font-size:0.70rem"></i>TOR</a>
+        {% include '../../buttons/course_commencement_status.html' with id=item.id %}
+    {%endif%}
+
+{%elif slug == 'course'%}
+    {% include '../../buttons/create_course_enrollment.html' with id=item.id %}
+{% endif %}

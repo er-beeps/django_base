@@ -1,0 +1,15 @@
+{%load custom_tags %}
+{% if widget.is_initial %}
+    <p class="ml-5">
+        {% if widget.value.url|get_extension == 'pdf' %}
+            <a href="{{ widget.value.url }}" target="_blank"><i class="fa fa-file-pdf fa-2x text-danger"></i></a>
+        {% elif widget.value.url|get_extension == 'pptx' %}
+            <a href="{{ widget.value.url }}" target="_blank"><i class="fa fa-file-powerpoint fa-2x text-danger"></i></a>
+        {% elif widget.value.url|get_extension == 'docx' %}
+            <a href="{{ widget.value.url }}" target="_blank"><i class="fa fa-file-word fa-2x text-primary"></i></a>
+        {%else%}
+            <img class="rounded app-icon" src="{{ widget.value.url }}" height="70" width="100" style="object-fit:cover;">
+        {%endif%}
+    </p>
+{% endif %}
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>

@@ -1,0 +1,71 @@
+<div class="pagination">
+    <span class="mr-5" id="total">Total : {{list_count}}</span>
+    <span class="step-links">
+        
+        {% if pages.has_previous %}
+            <a href="javascript:;" name="page" value="1" onClick=CUSTOMJS.reloadList(this)>&laquo; First</a>
+            <a href="javascript:;" name="page" value="{{pages.previous_page_number}}" onClick=CUSTOMJS.reloadList(this)>Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page <b>{{ pages.number }}</b> of <b>{{ pages.paginator.num_pages }}</b>.
+        </span>
+
+        {% if pages.has_next %}
+            <a href="javascript:;" name="page" value="{{pages.next_page_number}}" onClick=CUSTOMJS.reloadList(this)>Next</a>
+            <a href="javascript:;" name="page" value="{{pages.paginator.num_pages}}" onClick=CUSTOMJS.reloadList(this)>Last</a>
+        {% endif %}
+    </span>
+</div>
+
+{% block style%}
+<style>
+    .pagination {
+        display: flex;
+        justify-content: right;
+        margin-top: 20px;
+      }
+      
+      .step-links a, #total {
+        color: #333;
+        display: inline-block;
+        padding: 4px 16px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      
+      .step-links a:hover {
+        background-color: #eee;
+      }
+      
+      .current {
+        margin: 0 10px;
+      }
+      
+      .current span {
+        background-color: #333;
+        color: #fff;
+        padding: 8px 16px;
+        border-radius: 4px;
+      }
+      
+      .step-links a:first-child,
+      .step-links a:last-child, #total {
+        font-weight: bold;
+        background-color: #e0eae9;
+        color: black;
+      }
+      
+      .step-links a:first-child:hover,
+      .step-links a:last-child:hover {
+        background-color: #a7aead;
+      }
+      
+      .step-links a:not(:first-child):not(:last-child):hover {
+        background-color: #ccc;
+      }
+      
+</style>
+  
+{% endblock%}

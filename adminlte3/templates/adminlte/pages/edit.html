@@ -1,0 +1,50 @@
+{% extends 'adminlte/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block tab_links %}
+{% if tab_links %}
+  {%include '../lib/_tab.html' with links=tab_links.links%}
+{%endif%}
+{%endblock%}
+
+{% block page_name %}
+
+  <div class="container-fluid">
+    <div class="row pl-2">
+        <h4>
+            <span class="text-capitalize"> {{ header }}</span>
+            {% include '../buttons/back_button.html' %}
+        </h4>
+    </div>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid card">
+    <div class="p-3 pb-4">
+            <form enctype="multipart/form-data" name="edit_form" action="{% url request.resolver_match.app_name|add:':crud_update' slug entry.id %}" method="POST" id="{{ slug|add:"_form" }}" autocomplete="off" >
+            {% csrf_token %}
+            <input type="hidden" value="{{entry.id}}" id="entry_id">
+
+            <div class="row">
+                {% for field in form %}
+                        <div class="pt-1">
+                            {{ field|as_crispy_field }}
+                        </div>
+                {% endfor %}
+                {% if slug == 'evaluation_scheme' %}
+                    {% include './partial/subject/subject_evaluation_exam_type.html' %}
+                {% endif %}
+                {% if slug == 'group' %}
+                    {% include 'widgets/custom_checkbox_select.html' %}
+                {% endif %}
+            </div>
+
+            {% include 'adminlte/buttons/save_and_cancel_button.html' %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+

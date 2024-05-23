@@ -1,0 +1,48 @@
+{% load custom_tags %}
+ 
+ <table id="crudTable" class="table table-sm table-striped table-hover bg-white nowrap" width="100%" style="background-color:lightgrey;" cellspacing="0">
+    <thead>
+    <tr>
+        <th class="text-center width-50" data-orderable="false">S.N</th>
+        {%if columns %}
+        {% for column in columns %}
+        <th>
+            {{ labels|get_item:column }}
+        </th>
+        {% endfor %}
+        {%endif%}
+        <th class="text-center left-border-lightgray width-100" data-orderable="false" >Action</th>
+    </tr>
+    </thead>
+    <tbody>
+            {% for item in lists %}
+                <tr>
+                    <td class="text-center right-border-lightgray">{{ forloop.counter }}</td>
+                    {% for column in columns %}
+                        {%if column == 'groups' %}
+                            <td>{{ item.groups.first}}</td>
+                        {%else%}
+                            {% if item|get_item_value:column %}
+                                <td>
+                                    {% if column|column_type:model == 'FileField'%}
+                                        {% include '../../components/file_field.html' %}    
+                                    {% else %}
+                                        {{ item|get_item_value:column }} </td>
+                                    {%endif%}
+                            {% else %}
+                                <td> - </td>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <td class="text-right left-border-lightgray">
+                        
+                        {% include './extra_buttons.html' with slug=slug item=item %}
+
+                        {% include '../../buttons/edit_button.html' with slug=slug id=item.id %}
+                        {% include '../../buttons/delete_button.html' with slug=slug id=item.id %}
+                    </td>
+                </tr>
+            {% endfor %}    
+    </tbody>
+</table>
+{% include './pagination.html' with pages=lists list_count=lists_count slug=slug %}

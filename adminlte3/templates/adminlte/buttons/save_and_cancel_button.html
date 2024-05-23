@@ -1,0 +1,157 @@
+<div class="row mt-5">
+<button type="button" class="btn btn-sm btn-success mr-2" id="form_submit_button" onclick="save_data()"><span class="fa fa-save"></span>{%if entry.id %} Update {%else%} Save {%endif%} </button>
+{%if fancybox %}
+<button type="button" class="btn btn-danger" onclick="$.fancybox.close()">Cancel</button>
+{%else%}
+{%if pid%}
+    <a type="button" class="btn btn-sm btn-danger ml-2" id="cancel-button" href="{% url request.resolver_match.app_name|add:':crud_list' pid slug %}"><span class="fa fa-ban"></span>  Cancel</a>
+    {%else%}
+    <a type="button" class="btn btn-sm btn-danger ml-2" id="cancel-button" href="{% url request.resolver_match.app_name|add:':crud_list' slug %}"><span class="fa fa-ban"></span>  Cancel</a>
+{%endif%}
+{%endif%}
+</div>
+
+{% block extra_js %}
+<script>
+
+function displayErrors(data) {
+    let html = '<ul>';
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const errorMessages = data[key];
+                errorMessages.forEach((error) => {
+                    html += `<li class="text-danger text-md">${error.message}</li>`;
+                });
+            }
+        }
+        html += '</ul>';
+        return html;
+    }
+
+    document.addEventListener('keydown',(e)=>{
+        if ((e.which === 115 || e.which === 83 ) && (e.ctrlKey || e.metaKey)){
+            e.preventDefault();
+            $("#form_submit_button").click();
+            return false;
+        }
+        return true;
+    });
+
+    function save_data(){
+        window.myform =$(event.target).closest('form');
+        //data = myform.serializeArray();
+        if(myform.length == 0 ){
+            window.myform = event.currentTarget.querySelector('form');
+            myform = $(myform);
+        }
+        myform.find(':input[disabled],select[disabled]').removeAttr('disabled');
+        window.action = $(myform).attr('action');
+        data = new FormData(myform[0]);
+        upload_files=''
+        if($("[name='file_upload']").val()){
+            upload_files = $("[name='file_upload']")[0].files;
+        }
+
+        if(upload_files !=''){
+            //data.push({name:'file_upload',value:upload_files[0]})
+            data.append('file_upload',upload_files[0],upload_files[0].name)
+        }
+        //data.push({name:'file_upload', value:upload_files});
+        window.form_errors = [];
+
+        //check for validation
+        is_valid = CUSTOMJS.validate($('#'+myform.attr('id')));
+        if(is_valid){
+            CUSTOMJS.tmpLoading('Saving...',true);
+            //$.post(action,data)
+            $.ajax({url:action,type:'POST',data:data,processData:false,contentType:false})
+                .done(function (response) {
+                    if(response.status =='success')
+                    {
+                        $.fancybox.close();
+                        CUSTOMJS.tmpLoading(false);
+                        setTimeout(() => {
+                            new Noty({
+                                text: response.message,
+                                theme:'sunset',
+                                type:'success',
+                                timeout:1200
+                            }).show();
+                            $("#noty_layout__topRight").css("width","300px");
+                        },300);
+                        setTimeout(()=> {
+                            //reload to list content
+                            if(response.url){
+                                window.location.href = window.location.origin+response.url
+                            }else{
+                                let url = $('#cancel-button').attr('href');
+                                window.location.href = window.location.origin+url;
+                            }
+                        },1200)
+                    }else{
+                        CUSTOMJS.tmpLoading(false);
+                        $.fancybox.close();
+                        msg_type= 'json'
+                        var jsonData=''
+                        try{
+                            jsonData=JSON.parse(response.message)
+                        }catch(error){
+                            msg_type ='plain'
+                            jsonData= response.message
+                        }
+             
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: '<h5>PROCESS ERROR</h5>',
+                            html: msg_type == 'json' ? displayErrors(jsonData) : jsonData,
+                            didClose: () => {
+                              // Your code to handle the modal close event
+                            },
+                          });
+                    }
+            
+                })
+                .fail(function (response) {
+                    CUSTOMJS.tmpLoading(false);
+                    $.fancybox.close();
+
+                    window.form_errors.push("<h6>"+response.responseJSON.message+"</h6>");
+                    var errors = response.responseJSON.errors;
+                    if(errors){
+                        for (let [key, value] of Object.entries(errors)) {
+                            var input = $(window.myform).find("input[name="+key+"]");
+                            if(input.hasClass("is-invalid") == false){
+                                input.addClass("is-invalid");
+                                input.closest('div.form-group').append('<div class="invalid-feedback">'+value.join('<br/>')+'</div>');
+                            }
+                            window.form_errors.push("<li>"+value+"</li>");
+                        }
+
+                        window.myform.find("input,select,textarea,radio,checkbox").on('change', function(ev){
+                            $(ev.target).removeClass("is-invalid");
+                            $(ev.target).closest("div.form-group").find(".invalid-feedback").remove();
+                        });
+                    }
+                    setTimeout(() => {
+                        new Noty({
+                            text: window.form_errors.join("<br/>"),
+                            type:'error',
+                            theme:'sunset',
+                            timeout:3000
+                        }).show();
+                        $("#noty_layout__topRight").css("width","400px");
+                    }, 200);
+                })
+            .always(function (response) {
+                setTimeout(function () {
+                    CUSTOMJS.tmpLoading(false);
+                    }, 700);
+            });
+        }
+    }
+
+</script>
+{% endblock %}
+
+

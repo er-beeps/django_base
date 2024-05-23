@@ -1,0 +1,96 @@
+{% extends "adminlte/base.html" %}
+{% load i18n static %}
+
+{% block body_class %}login-page{% endblock %}
+
+{% block body %}
+    <div class="login-box">
+        {% block logo %}
+          <div class="login-logo pr-5">
+            {% block logo_text %}<span class="font-weight-normal text-dark">Application</span>{% endblock %}
+          </div>
+        {% endblock %}
+        <!-- /.login-logo -->
+      <div class="card">
+            <div class="card-body login-card-body">
+
+                <p class="login-box-msg text-dark font-weight-bold">Sign in to start your session</p>
+                {% block login_form %}
+                    <form action="{% url 'auth:login' %}" method="post">
+                        {% csrf_token %}
+                        {% if request.GET.next %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        {% endif %}
+                        {% block login_errors %}
+
+                        {% if msg %}
+                              <p class="errorlist">Error : {{ msg }}</p>
+                        {% endif %}
+                      {% endblock login_errors %}
+
+                        <div class="input-group mb-3 mt-3">
+                          {{ form.username }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-user"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-group mb-3">
+                          {{ form.password }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-lock"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row ml-2">
+                            <div class="check-primary">
+                              <div class="col-md-12 mb-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="toggle" id="toggle">
+                                    <label class="form-check-label" for="toggle">Show Password</label>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn btn-primary btn-block">{% trans 'Sign In' %}</button>
+                        </div>
+                    </form>
+                {% endblock login_form %}
+   
+                
+                <!-- /.social-auth-links -->
+                <div class=" text-center mt-3">
+
+                    <p class="mb-0 font-weight-bold">
+                      New user ?? <a href="{% url 'auth:register' %}" class="text-center ml-2"> Register Here !</a>
+                    </p>
+                    <p class="mb-0">
+                      <a href="{% url 'auth:forgot_password' %}" class="text-center"> Forgot password !! </a>
+                    </p>
+                </div>
+
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+$('#toggle').click(function(){
+  var input = document.getElementById("id_password");
+  if (input.type === "password") {
+    input.type = "text";
+  } else {
+    input.type = "password";
+  }
+});
+</script>
+{% endblock %}
+
+

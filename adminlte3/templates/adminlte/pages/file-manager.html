@@ -1,0 +1,199 @@
+{% extends 'adminlte/base.html' %}
+{% load static custom_tags %}
+
+{% block extrastyle %}
+{% comment %} <link id="pagestyle" href="{% static 'css/corporate-ui-dashboard.css' %}?v=1.0.0" rel="stylesheet" /> {% endcomment %}
+
+<style>
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  i.fa-folder-plus,i.fa-folder-open,i.fa-trash {
+    margin-right: 5px;
+    color: #007bff;
+    cursor: pointer;
+  }
+  i.fa-eye,i.fa-times-circle{
+    cursor: pointer;
+  }
+  .image-container {
+    width: 600px; /* Set the desired width of the container */
+    height: 600px; /* Set the desired height of the container */
+    overflow: hidden; /* Hide any overflow */
+}
+</style>
+{% endblock extrastyle %}
+
+{% block content %}
+<div class="container-fluid py-1 px-3">
+  <div class="card">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          {% for breadcrumb in breadcrumbs %}
+            {% if forloop.last %}
+              <li class="breadcrumb-item active text-dark text-md" aria-current="page">{{ breadcrumb.name }}</li>
+            {% else %}
+              {% if breadcrumb.name|lower == 'media' %}
+                <li class="breadcrumb-item active text-dark text-md" aria-current="page">{{ breadcrumb.name }}</li>
+              {% else %}
+                <li class="breadcrumb-item text-md"><a href="{{ breadcrumb.url }}">{{ breadcrumb.name }}</a></li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+    
+    <div class="card-body row p-0">
+      <div class="col-md-4 border-right pl-3">
+        <ul class="list-unstyled">
+          {% for directory in directories %}
+            {% if directory.directories %}
+            <li class="">
+              <i class="fas fa-folder-plus"></i>
+              <a class="text-md" 
+                data-bs-toggle="collapse" 
+                href="#collapse{{directory.id}}" 
+                role="button" 
+                aria-expanded="false"
+                aria-controls="collapse{{directory.id}}"
+                onclick="toggleCollapse('{{directory.id}}')"
+                {% comment %} onclick="window.location.href = '{% url 'file_manager' directory.path|encoded_path %}';" {% endcomment %}
+              >
+                {{ directory.name }}
+              </a>
+            </li>
+            {% include './partial/subdirectories.html' with directory=directory depth=depth|add:"3" %}
+          {% else %}
+            <li>
+              <i class="fas fa-folder-plus"></i>
+              <a class="text-md" href="{% url 'file_manager' directory.path|encoded_path %}">{{ directory.name }}</a>
+            </li>
+            {% endif %}
+            <hr>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="col-md-8">
+        {% if files %}
+          {{files|length|json_script:"files-count"}}
+          <div class="table-responsive">
+            <table class="table">
+              <tr class="bg-light">
+                <th scope="col">S.N.</th>
+                <th scope="col">File Name</th>
+                <th scope="col">File Type</th>
+                <th scope="col">Actions</th>
+              </tr>
+              {% for file in files %}
+              <tr data-bs-toggle="tooltip" title="{{file.file_path|info_value}}">
+                <td>{{ forloop.counter}}</td>
+                <td>{{ file.filename }}</td>
+                <td>{{ file.filename|file_extension|cut:"."|upper }}</td>
+                <td>
+                  <div class="d-flex align-items-center actions">
+                    <span data-bs-toggle="modal" data-bs-target="#file-{{forloop.counter}}">
+                      <i title="View" class="fas fa-eye text-primary"></i>
+                    </span>
+                    <div class="dot-separator mx-2"></div>
+                    <span data-bs-toggle="modal" data-bs-target="#delete-{{forloop.counter}}">
+                      <i title="Delete" class="fas fa-trash text-danger"></i>
+                    </span>
+                </td>
+              </tr>
+              <!-- Modal -->
+              <div class="modal fade" id="file-{{forloop.counter}}" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title text-lg" id="staticBackdropLabel">{{ file.filename }}</h1>
+                        <a href="{% url 'download_file' file.file|encoded_file_path %}">
+                          <i title="Download" class="fas fa-download text-success fa-2x"></i>
+                        </a>
+                      <div class="" id="modal-close-btn-{{forloop.counter}}" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times-circle text-danger fa-2x"></i>
+                      </div>
+                    </div>
+                    <div class="modal-body">
+                      {% if file.filename|file_extension in ".jpg, .png, .gif" %}
+                      <div class="image-container text-center align-items-center">
+                        <img width="100%" height="100%" src="/media/{{ file.file }}" alt="">
+                      </div>
+                      {% elif file.filename|file_extension in ".mp4, .webm, .ogg" %}
+                        <video class="w-100" height="700" controls>
+                          <source src="/media/{{ file.file }}" type="video/mp4">
+                        </video>
+                      {% elif file.filename|file_extension in ".pdf, .txt" %}
+                        <iframe src="/media/{{ file.file }}" width="100%" height="500px"></iframe>
+                      {% elif file.filename|file_extension in ".csv" %}
+                        <pre class="bg-dark text-light p-3">{{ file.csv_text }}</pre>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Delete Modal-->
+              <div class="modal fade" id="delete-{{forloop.counter}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Delete File</h1>
+                    </div>
+                    <div class="modal-body">
+                      {{file.filename}}
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <a class="btn btn-danger" href="{% url 'delete_file' file.file|encoded_file_path %}">Delete</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </table>
+          </div>
+        {% else %}
+          <p class="text-center text-lg text-danger">-- No files --</p>
+        {% endif %}
+      </div>
+    </div>  
+  </div>
+
+</div>
+{% endblock content %}
+
+{% block extrascripts %}
+<script>
+
+ function toggleCollapse(id) {
+    // Collapse all menu items
+    var fragment = window.location.hash;
+
+    // Check if the fragment starts with #collapse
+    if (fragment && fragment.startsWith('#collapse')) {
+        // Find the corresponding menu item by ID
+        var targetMenuItem = document.querySelectorAll(`a[href='${fragment}']`)
+        // Check if the target menu item exists and has a parent
+        if (targetMenuItem.length > 0) {
+            // Traverse up the DOM to find parent menu items and expand them
+            targetMenuItem.parents('li[id^="collapse"]').addClass('show');
+        }
+    }
+    // Toggle the clicked menu item
+}
+  
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' || event.key === 'Esc' || event.key === 27) {
+      let files = document.getElementById('files-count').textContent;
+      for (let i = 1; i <= files; i++) {
+        let closeButtonElements = document.getElementById(`modal-close-btn-${i}`);
+        closeButtonElements.click();
+      }
+    }
+  })
+</script>
+
+{% endblock extrascripts %}

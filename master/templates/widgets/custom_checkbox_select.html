@@ -1,0 +1,118 @@
+{% load custom_tags %}
+<style>
+  .accordion {
+    border-bottom: 1px solid #ddd;
+    border-radius: 5px;
+    padding-top:5px;
+  }
+  
+  .accordion-header {
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    width:100%;
+  }
+  
+  .accordion-label{
+    cursor:pointer;
+  }
+
+  .accordion-checkbox {
+    margin-right: 5px;
+    cursor:pointer;
+  }
+  
+  .accordion-body {
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .child-checkbox {
+    margin-left: 10px !important;
+    margin-right: 5px !important;
+    cursor:pointer;
+  }
+  .child-checkbox-label{
+    cursor:pointer;
+  }
+  .txt-orangered{
+    color:orangered;
+  }
+  .txt-color{
+    color:blue;
+  }
+  .txt-darkorchid{
+    color:darkorchid;
+  }
+  h5{
+    text-decoration:underline;
+  }
+  
+</style>
+<div class="container-fluid px-5">
+    <h5 class="text-primary font-weight-bold mt-2">PERMISSIONS</h5>
+    <input type="text" id="searchInput" class="form-control mt-3" placeholder="Search model...">
+    {% for content in content_types %}
+    {%if content.app_label|check_app_label %} <h5 class="txt-color mt-2 ml-3"> {{content.app_label|capfirst}}</h5> {%endif%}
+    <div class="row accordion col-md-12 ml-4">
+      <div class="col-md-4 accordion-header">
+        <input type="checkbox" class="accordion-checkbox" id="{{ content.id }}" onclick="checkAll(this)">
+        <label class="accordion-label mt-2 txt-darkorchid ml-1 font-weight-bold" for="{{ content.id }}">{{ content.model|capfirst }}</label>
+      </div>
+        <div class="col accordion-body-{{content.id}} p-1">
+          <div class="form-row">
+          {% for permission in content.permission_set.all %}
+            <div class="col">
+              <input type="checkbox" class="child-checkbox" id="child-{{permission.id }}" name="permissions" value="{{permission.id }}" {% if permission.id in group_permission %} checked {% endif %}>
+              <label class="child-checkbox-label" for="child-{{ permission.id }}"> {{ permission.codename|make_action_only }}</label>
+            </div>
+        {% endfor %}
+        </div>
+        </div>
+    </div>
+    {%if forloop.last %} {{ content.app_label|clear_app_label}} {%endif%}
+
+    {% endfor %}
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('input', function () {
+      var searchText = this.value.toLowerCase();
+
+      var accordionLabels = document.querySelectorAll('.accordion-label');
+
+      accordionLabels.forEach(function (label) {
+        var labelValue = label.textContent.toLowerCase();
+        var accordion = label.closest('.accordion');
+
+        if (labelValue.includes(searchText)) {
+          accordion.style.display = 'block';
+        } else {
+          accordion.style.display = 'none';
+        }
+      });
+    });
+  });
+
+function checkAll(item)
+{
+  let item_id = item.id;
+  if(item_id)
+  {
+    let checkboxes = $('.accordion-body-'+item_id).find('.child-checkbox')
+
+    if($(item).is(":checked")){
+      checkboxes.each(function(index,checkbox){
+        checkbox.checked=true;
+      })
+    }else{
+      checkboxes.each(function(index,checkbox){
+        checkbox.checked=false;
+      })
+    }
+  }
+
+}
+</script>

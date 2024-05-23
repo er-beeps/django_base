@@ -1,0 +1,79 @@
+{% load static custom_tags %}
+
+<div class="row mb-2">
+    <div class="col-md-12">
+        <ul class="nav nav-tabs flex-column flex-sm-row mt-2" id="examTab" role="tablist">
+            <li role="presentation" class="nav-item border border-white">
+                <a class="nav-link tab-link p-1 pr-2 pl-2 not-stated" 
+                href="{% url 'examination:crud_list' 'exam_application' %}?status=Not+Stated" role="tab">New</a>
+            </li>
+            <li role="presentation" class="nav-item border border-white">
+                <a class="nav-link tab-link  p-1 pr-2 pl-2 committee-formed" 
+                href="{% url 'examination:crud_list' 'exam_application' %}?status=Committee+Formed" role="tab">Committee Formed</a>
+            </li>
+            <li role="presentation" class="nav-item border border-white">
+                <a class="nav-link tab-link  p-1 pr-2 pl-2 scheduled" 
+                href="{% url 'examination:crud_list' 'exam_application' %}?status=Scheduled" role="tab">Scheduled</a>
+            </li>
+            <li role="presentation" class="nav-item border border-white">
+                <a class="nav-link tab-link  p-1 pr-2 pl-2 completed" 
+                href="{% url 'examination:crud_list' 'exam_application' %}?status=Completed" role="tab">Completed</a>
+            </li>
+        </ul>
+    </div>
+</div>
+  
+<style>
+    #examTab .nav-item{
+        font-size:.880rem;
+    }
+    #examTab .nav-item .nav-link{
+        padding:5px 15px !important;
+    }
+    .nav-tabs .nav-link.active{
+      color:#da4040 !important;
+      font-weight:550 !important;
+      border-color: rgba(241, 241, 241, 0.66) !important;
+      border-bottom: 3px solid #467fcf !important;
+    }
+  </style>
+
+  <script>
+    var url = new URL(window.location.href);
+    var statusParam = url.searchParams.get('status');
+
+    if(statusParam){
+        var active_item='not-stated';
+    }else{
+        var active_element=document.getElementsByClassName('not-stated');
+        active_element[0].click();
+    }
+        switch(statusParam){
+            case 'Not Stated':
+                active_item = active_item;
+                active_element = active_item;
+                break;
+            case 'Committee Formed':
+                active_item = 'committee-formed';
+                active_element = document.getElementsByClassName('committee-formed');
+                break;
+            case 'Scheduled':
+                active_item = 'scheduled';
+                active_element = document.getElementsByClassName('scheduled');
+                break;
+            case 'Completed':
+                active_item ='completed';
+                active_element =document.getElementsByClassName('completed');
+                break;
+        }
+
+        navbars = document.getElementsByClassName('tab-link');
+        Array.from(navbars).forEach(function(navbar){
+           if (navbar.classList.contains(active_item)){
+                navbar.classList.add('active')
+            }else{
+                navbar.classList.add('bg-lightblue')
+           }
+        })
+        
+  </script>

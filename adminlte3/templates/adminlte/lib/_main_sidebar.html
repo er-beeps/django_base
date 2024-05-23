@@ -1,0 +1,132 @@
+{% load static adminlte_helpers custom_tags %}
+    
+<!-- Left side column. contains the sidebar -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4 overflow-auto">
+     <!-- Brand Logo -->
+    {% block logo %}
+        <a href="{% url 'master:homepage' %}" class="brand-link">
+            <img src="" alt="" class="brand-image" style="opacity: 1; min-height:40px">
+            {% block logo_text %}<span class="brand-text font-weight-bold">Application</span>{% endblock %}
+        </a>
+    {% endblock %}
+    <!-- sidebar: style can be found in sidebar.less -->
+    <div class="sidebar">
+        <!-- Sidebar user panel -->
+        {% block user_panel %}
+        <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% avatar_url size=90 %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+            <a href="#" class="d-block">{% firstof request.user.get_full_name request.user.username %}</a>
+            <a href="#" class="d-block">Role : {{ request.user.groups.first  }}</a>
+            
+        </div>
+      </div>
+        {% endblock %}
+
+        {% block form %}{% endblock %}
+
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        {% block nav_links_ul %}
+        <nav class="mt-2" id="sidebar">
+            <ul class="nav nav-pills nav-sidebar flex-column nav-compact nav-child-indent text-sm" data-widget="treeview" role="menu" data-accordion="false">
+
+                <li class="nav-item">
+                    <a href="{% url 'master:homepage' %}" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i> 
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+
+                <hr style="border:1px solid grey; width:100%">
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-align-justify"></i> <p>Primary Master</p>
+                            <p><i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                        
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'country' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>Country</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'province' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>Province</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'district' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>District</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'local_level' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>Local Level</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'fiscal_year' %}" class="nav-link">
+                                    <i class="far fa-calendar nav-icon"></i>
+                                    <p>Fiscal Year</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'nepali_month' %}" class="nav-link">
+                                    <i class="far fa-calendar nav-icon"></i>
+                                    <p>Nepali Month</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'gender' %}" class="nav-link">
+                                    <i class="fa fa-venus-mars nav-icon"></i>
+                                    <p>Gender</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-align-justify"></i> <p>Auth</p>
+                            <p><i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'user' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>User</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'group' %}" class="nav-link">
+                                    <i class="far fa-compass nav-icon"></i>
+                                    <p>Role</p>
+                                </a>
+                            </li>
+                       
+                            <li class="nav-item">
+                                <a href="{% url 'master:crud_list' 'activity_logs' %}" class="nav-link">
+                                    <i class="fa fa-cogs nav-icon"></i>
+                                    <p>Activity Log</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+            </ul>
+        </nav>
+        {% endblock nav_links_ul %}
+    </div>
+    <!-- /.sidebar -->
+</aside>

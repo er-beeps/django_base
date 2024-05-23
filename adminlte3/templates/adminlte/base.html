@@ -1,0 +1,105 @@
+ {% load static adminlte_helpers i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block title_outer %}
+        <title>Application</title>
+        <link rel="shortcut icon" type="image/jpg" href="#"/>
+    {% endblock %}
+
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    {% endblock %}
+
+    {% block stylesheets %}
+        {% include 'adminlte/lib/_styles.html' %}
+        {% include "fancybox/fancybox_css.html" %}
+
+        {% block extrastyle %}{% endblock extrastyle %}
+        {% block style_sheets %}{% endblock %}
+
+        
+    <style>
+        .modal.show {
+            backdrop-filter: blur(3px);
+        }
+</style>
+    {% endblock %}
+</head>
+<body class="hold-transition sidebar-mini {% block body_class %}{% block bodyclass %}layout-fixed text-sm {% endblock %}{% endblock %}">
+
+{% block body %}
+
+    <div class="wrapper">
+        {% block nav_header %}
+            {% include 'adminlte/lib/_main_header.html' %}
+        {% endblock %}
+
+        {% block nav_sidebar %}
+            {% include 'adminlte/lib/_main_sidebar.html' %}
+        {% endblock %}
+
+        {% block content_wrapper %}
+        <div class="content-wrapper">
+            {% block content_header %}
+                <section class="content-header">
+                    {% block no_heading %}
+                        {% block tab_links %}{% endblock %}
+                        <h2>
+                            {% block page_name %}{% endblock %}
+                        </h2>
+                            {% block buttons %}
+                            {% endblock%}
+                        {% block breadcrumbs %}
+                            {# Breadcrumb implementation left to developers #}
+                        {% endblock %}
+                    {% endblock no_heading %}
+                </section>
+            {% endblock %}
+
+            {% block content_outer %}
+            <section class="content">
+                {% block messages %}
+                    {% comment %} {% include 'adminlte/lib/_messages.html' %} {% endcomment %}
+                {% endblock %}
+
+                {% block content_block_wrap %}
+                    {% block content %}{% endblock %}
+                {% endblock %}
+            </section>
+            {% endblock %}
+        </div>
+        {% endblock content_wrapper %}
+    
+    </div>
+{% endblock body %}
+
+{% block javascript %}
+{% include 'adminlte/lib/_scripts.html' %}
+{% include "fancybox/fancybox_js.html" %}
+<script src="{% static 'main/js/dependent_dropdown.js' %}"></script>
+<script src="{% static 'main/js/create_update.js' %}"></script>
+<script src="{% static 'main/js/date_converter.js' %}"></script>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    jQuery(document).ready(function($) {
+        $("a[class*=fancybox]").fancybox({
+        clickSlide: false, // disable close on outside click
+        touch: false, // disable close on swipe
+        });
+    });
+    
+    
+    </script>
+{% endblock %}
+
+{% block extra_js %}{% endblock %}
+{% block extrascripts %}{% endblock extrascripts  %}
+
+{% block extra_foot %}{% endblock %}
+</body>
+</html>

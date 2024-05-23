@@ -1,0 +1,116 @@
+{% load static %}
+
+    <!--Stylesheets-->
+      <link rel="stylesheet" type="text/css" href="{% static 'main/leaflet/leaflet.css' %}" />
+    <style>
+        #map {
+            border: 1px solid gray;
+            border-radius: 25px;
+            margin:25px 2% 50px 25%;
+            height:calc(100vh - 300px);
+            width: calc(100vh + 200px);
+        }
+
+        @media screen and (min-width: 1000px) and (max-width:1700px){
+            #map {
+                  border: 1px solid gray;
+                  border-radius: 25px;
+                  margin:25px 2% 50px 10%;
+                  height:calc(100vh - 200px);
+                  width: calc(100vh + 400px);
+                  }
+        }
+    
+    </style>
+<div class="row">
+      <div class ="col-md-10"id='map'></div>
+</div>
+<script type="text/javascript"  src="{% static 'main/leaflet/leaflet.js' %}" ></script>
+<script type="text/javascript"  src="{% static 'main/leaflet/leaflet.js.map' %}" ></script>
+
+ <script>
+      var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            mbUrl = 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+
+            var satellite = L.tileLayer(mbUrl, {
+                  id: 'mapbox.streets-satellite',
+                  attribution: mbAttr,
+                  maxZoom: 20,
+                  subdomains:['mt0','mt1','mt2','mt3']
+            });
+          
+
+      var map = L.map('map', {
+            center: [28.34, 84.25],
+            zoom: 7.0,
+            layers: [satellite],
+      });
+
+      var baseLayers = {
+            "Satellite": satellite,
+      };
+
+      L.control.layers(baseLayers).addTo(map);
+
+      var display_icon = L.icon({iconUrl:'/static/main/leaflet/images/marker-icon.png',iconSize:[20,30]})
+      var marker = L.marker( [0, 0],{icon:display_icon}).addTo(map);
+      
+            map.on('click', function(e) {
+            let latitude = e.latlng.lat.toString().substring(0, 8);
+            let longitude = e.latlng.lng.toString().substring(0, 8);
+            $('#id_gps_lat').val(latitude);
+            $('#id_gps_long').val(longitude);
+
+            updateMarker(latitude, longitude);
+            });
+
+            function updateMarker(lat, lng) {
+            marker
+            .setLatLng([lat, lng])
+            .bindPopup("Coordinates :  " + marker.getLatLng().toString())
+            .openPopup();
+            map.setView([lat,lng],20);
+            $('#id_gps_lat').val(lat);
+            $('#id_gps_long').val(lng);
+            return false;
+            };
+
+
+            function updateMarkerByInputs() {
+            var latitude = $('#id_gps_lat').val();
+            var longitude = $('#id_gps_long').val();
+            return updateMarker(latitude,longitude);
+            }
+
+
+      function getLocation() {
+            if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                  alert("Your Browser does not support Geo-location.");
+            }
+      }
+
+      function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            updateMarker(latitude, longitude);
+      }
+
+      $('#id_gps_lat').change(function(){
+            updateMarkerByInputs();
+      });
+      $('#id_gps_long').change(function(){
+            updateMarkerByInputs();
+      });
+
+      if($('#id_gps_lat').val() =='')
+      {
+            getLocation();
+      }else{
+            updateMarkerByInputs();
+      }
+
+</script>

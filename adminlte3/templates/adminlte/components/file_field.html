@@ -1,0 +1,14 @@
+{% load custom_tags %}
+{% with file_url=item|get_item_value_as_url:column|default:'' %}
+    {% if file_url %}
+        {% if file_url|get_extension == 'pdf' %}
+            <a href="{{ file_url }}" target="_blank"><i class="fa fa-file-pdf text-danger"></i></a>
+        {%elif file_url|get_extension == 'pptx' %}    
+            <a href="{{ file_url }}" target="_blank"><i class="fa fa-file-powerpoint text-danger"></i></a>
+        {%elif file_url|get_extension == 'docx' %}    
+            <a href="{{ file_url }}" target="_blank"><i class="fa fa-file-word text-primary"></i></a>
+        {% else %}
+            <a target="_blank" href="{{ file_url }}"><img src="{{ file_url }}" alt="" height="40"></a>
+        {% endif %}  
+    {% endif %}     
+{% endwith %} 

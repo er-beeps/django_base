@@ -1,0 +1,187 @@
+{% extends 'adminlte/base.html' %}
+{% load static custom_tags %}
+
+{% block style_sheets %}
+  <link rel="stylesheet" type="text/css" href="{% static 'admin-lte/plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin-lte/plugins/datatables.net-fixedheader-bs4/css/fixedHeader.bootstrap4.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin-lte/plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin-lte/plugins/datatables-fixedcolumns/css/fixedColumns.bootstrap4.min.css' %}">
+{% endblock %}
+
+{% block tab_links %}
+
+
+
+{% if tab_links %}
+  {%include '../lib/_tab.html' with links=tab_links.links%}
+{%endif%}
+
+{% endblock %}
+
+{% block page_name %}
+    <div class="card p-2 pl-4">
+      <h4>
+        <span class="text-capitalize"> {{ header }}</span>
+          {% create_list 'add' slug as mylist %}
+          {% if request.user|check_permission:mylist %}
+            {% include '../buttons/create_button.html' %}
+          {%endif%}
+
+          {%if slug == 'exam_application' %}
+          <hr/>
+          <div>
+            {%include '../lib/exam_application_tab.html'%}
+          </div>
+          {%endif%}
+
+          {%if slug == 'evaluation_scheme' %}
+            <a href="{% url 'master:clone_evaluation_scheme' pid %}" class="btn btn-sm btn-primary ml-5 p-0 pl-1 pr-2"><i class="fa fa-copy"></i>  Clone Scheme</a>
+          {%endif %}
+
+          {% if upload_button %}
+            {% include '../buttons/upload_button.html' %}
+          {%  endif %}
+      </h4>
+      {%if pid %}
+        {%if category == 'exam'%}
+        <div class="row subject-exam-type">
+          <div class="col">
+            <h6>APPLICATION:<span class="text-primary"> {{application}}</span></h6>
+            <h6>RESEARCH TITLE: <span class="text-primary"> {{application.research_title}}</span></h6>
+          </div>
+          <div class="col">
+            <h6>SUBJECT: <span class="text-primary">{{application.research_subject}}</span></h6>
+            <h6>EXAM TYPE: <span class="text-primary">{{application.exam_type}}</span></h6>
+          </div>
+        </div>
+
+        {%endif%}
+        {%if category == 'subject'%}
+          <h6>SUBJECT:<span class="text-primary"> {{subject}}</span></h6>
+        {%endif%}
+          <h5>{% include '../buttons/back_button.html' %}</h5>
+      {%endif%}
+    </div>
+
+{% endblock %}
+
+{% block buttons %}
+{% endblock%}
+
+{% block content %}
+
+    <div class="card">
+   
+      {% if hasFilter %}
+        <div class="form-row card-body p-0 pl-4">
+          <div class="col-md-10">
+            {% include './partial/filter.html' with filterFields=filterFields slug=slug %}
+          </div>
+          <div class="col-md-2 mt-4">
+	          <a href="javascript:;" onClick="CUSTOMJS.clearFilter(this)" slug="{{ slug }}" class="btn text-secondary"><i class="fa fa-filter"></i> Clear Filters</a>
+          </div>
+              <hr class="hr-line">
+        </div>
+      {% endif %}
+        <div class="card-body" style="overflow-x:auto;">
+              <div id ="section-datatable"></div>
+              {% comment %} {% include './partial/datatable.html' with columns=columns labels=labels lists=lists slug=slug %} {% endcomment %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block extra_js %}
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables.net-fixedheader-bs4/js/fixedHeader.bootstrap4.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables-fixedcolumns/js/dataTables.fixedColumns.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'admin-lte/plugins/datatables-fixedcolumns/js/fixedColumns.bootstrap4.min.js' %}"></script>
+
+  <script>
+    $(document).ready(function() {
+      let slug = "{{ slug }}";
+      let pid = "{{pid}}";
+      let page_num = "{{ page_num }}";
+      param = {
+        'page':page_num,
+      }
+
+      // Create a URLSearchParams object
+      var url = new URL(window.location.href);
+
+      // Get the value of the 'status' parameter
+      if(slug == 'exam_application'){
+        var statusParam = url.searchParams.get('status');
+
+        if(statusParam){
+          param['status'] =statusParam;
+        }
+      }
+      
+      // Check if application_id is not an empty string
+      if (pid !== '') {
+        // Append application_id to the param object
+        param['pid'] = pid;
+      }
+      if(slug !== ''){
+        loadDatatableList(slug,param);
+      }
+
+      document.addEventListener('keydown',(e)=>{
+        if ((e.which === 13)){
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    });
+    });
+
+
+
+  function loadDatatableList(slug,params){
+    var url = "{% url request.resolver_match.app_name|add:':crud_list' slug %}" + "/filter";
+
+    if(typeof(params) != 'undefined'){
+        $('#section-datatable').html('<div class="text-center"><img src="{%static "admin-lte/images/loading.gif" %}"/></div>');
+
+        $.get(url,params,function(response) {
+            $('#section-datatable').html(response);
+            initDatatable();
+        });
+    }else{
+        $('#section-datatable').html('<div class="text-center"><img src="{%static "admin-lte/images/loading.gif" %}"/></div>');
+
+        $.get(url,function(response) {
+            $('#section-datatable').html(response);
+            initDatatable();
+        });
+    }
+  }
+
+  function initDatatable(){
+    $('#crudTable').DataTable({
+      searching: false,
+      fixedHeader: true,
+      scrollX: true,
+      scrollCollapse: true,
+      caseInsensitive: true,
+      fixedColumns:   {
+          leftColumns: 0,
+          rightColumns: 1
+      },
+      pageLength: 20,
+      paging:false,
+      bInfo:false,
+    });
+  }
+
+  let field = $('.filter-field').parent().parent().css({"margin-right":"5px"});
+
+  </script>
+{% endblock %}
+
+    

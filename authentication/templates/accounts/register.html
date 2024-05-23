@@ -1,0 +1,120 @@
+{% extends "adminlte/base.html" %}
+{% load i18n static %}
+
+{% block body_class %}login-page{% endblock %}
+
+{% block body %}
+    <div class="login-box" style="width:500px">
+        {% block logo %}
+        <div class="login-logo pr-5">
+          {% comment %} <img src="{%static 'main/img/gas_header.png' %}" alt="Logo" style="height:50px"> {% endcomment %}
+          {% block logo_text %}<span class="font-weight-normal text-dark">Track My Thesis</span>{% endblock %}
+        </div>
+        {% endblock %}
+      <div class="card">
+            <div class="card-body login-card-body">
+
+                <p class="login-box-msg text-dark font-weight-bold">Register as new user !!</p>
+                {% block register_form %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+
+                          {% block login_errors %}
+                              {% if form.errors %}
+                                  {% for field,error in msg.items %}
+                                     {{ error }}
+                                  {% endfor %}
+                              {% endif %}
+                            {% endblock login_errors %}
+
+                        <div class="row mt-3">
+                          <div class="col input-group mb-3">
+                            {{ form.first_name }}
+                            <div class="input-group-append">
+                              <div class="input-group-text">
+                                <span class="fas fa-pen"></span>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col  input-group mb-3">
+                            {{ form.last_name }}
+                            <div class="input-group-append">
+                              <div class="input-group-text">
+                                <span class="fas fa-pen"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                          {{ form.username }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-user"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-group mb-3">
+                          {{ form.email }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-envelope"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-group mb-3">
+                          {{ form.password1 }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-lock"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-group mb-3">
+                          {{ form.password2 }}
+                          <div class="input-group-append">
+                            <div class="input-group-text">
+                              <span class="fas fa-lock"></span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div class="row">
+                            <button type="submit" class="btn btn-primary btn-block">{% trans 'Register' %}</button>
+                        </div>
+                    </form>
+                {% endblock register_form %}
+                
+                <div class=" text-center mt-3 font-weight-bold">
+                  <p class="mb-0">
+                      Already a registered user ??<a href="{% url 'auth:login' %}" class="text-center"> Sign in here !!</a>
+                  </p>
+                </div> 
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+        <!-- /.card -->
+    </div>
+    <!-- /.login-box -->
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+  let status = "{{status}}";
+  if(status == 'True'){
+
+    new Noty({
+      type: 'success',
+      text: '{{msg}}',
+      timeout: 2000,
+      progressBar:true,
+      closeWith:['click'],
+    }).show()
+
+    setTimeout(function(){
+      window.location.href ="/login/";
+    },2500)
+     
+  }
+</script>
+{% endblock %}

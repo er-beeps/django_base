@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+<form action="{% url request.resolver_match.app_name|add:':filter_crud_list' slug %}"   autocomplete="off">
+    <div class="form-row mt-1">
+        {{ filterFields.form|crispy }}
+    </div>
+</form>
+
+
+
+
+
+

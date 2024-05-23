@@ -1,0 +1,43 @@
+{% load custom_tags %}
+{% create_list 'change' slug as mylist %}
+	{% if request.user|check_permission:mylist %}
+	{%if slug == 'expert' %}
+	<a href="{% url request.resolver_match.app_name|add:':expert_update' slug id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+
+	{%elif slug == 'exam_committee'%}
+	<a href="{% url 'examination:exam_committee_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+
+	{%elif slug == 'exam_schedule'%}
+	<a href="{% url 'examination:exam_schedule_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+
+	{%elif slug == 'exam_evaluation'%}
+		{% if user|has_group:"Super Admin,Admin" %}
+			<a href="{% url 'examination:exam_evaluation_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+		{%else%}	
+			<a href="{% url 'examination:exam_evaluation_update' id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+		{%endif%}
+	{%elif slug == 'student_grade' %}
+	<a href="{% url 'examination:student_grade_update' id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+	
+	{%elif slug == 'exam_grade' %}
+	<a href="{% url 'examination:exam_grade_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+	
+	{%elif slug == 'course' %}	
+	<a href="{% url 'course:course_update' id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+	
+	{%elif slug == 'enrollment_course' %}	
+	<a href="{% url 'course:student_enrollment_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+
+	{%elif slug == 'evaluation_scheme' %}
+	<a href="{% url 'master:evaluation_scheme_update' pid id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+
+	{%else%}
+		{%if pid %}
+			<a href="{% url request.resolver_match.app_name|add:':crud_update' pid slug id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+		{%else%}
+        	{% if slug|unless_exists:"assign_course_subject" %}
+				<a href="{% url request.resolver_match.app_name|add:':crud_update' slug id %}" class="btn btn-sm btn-success edit-btn" data-style="zoom-in" tooltip title="Edit"><i class="fa fa-edit" style="font-size:0.70rem"></i></a>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+{% endif %}	

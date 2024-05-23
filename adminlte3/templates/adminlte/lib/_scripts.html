@@ -1,0 +1,94 @@
+{% load static %}
+
+{% block scripts %}
+<script src="{% static 'admin-lte/plugins/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'admin-lte/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<script src="{% static 'admin-lte/plugins/select2/js/select2.full.min.js' %}"></script>
+{% comment %} <script src="{% static 'main/js/fontawesome.min.js' %}"></script> {% endcomment %}
+
+
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+
+    $(document).ready(function() {
+        // initialize select2 
+        $('select#id_student,select#id_program,select#id_supervisor,select#id_research_subject').select2();
+        $('.searchselect').select2();
+
+        var path = window.location.pathname;
+    
+        // Loop through each sidebar link and check if it matches the current URL
+        $('ul.nav-sidebar a.nav-link').each(function() {
+            var href = $(this).attr('href');
+            href = href.replace('/list','')
+            // Check if the path starts with the href attribute value
+            if (path.includes(href)) {
+                $(this).addClass('active');
+                
+                // If it's a submenu item, expand the parent menu items
+                var parentItems = $(this).parents('li.nav-item');
+                parentItems.addClass('menu-open');
+    
+                // Also add 'active' class to parent menu items
+                parentItems.children('a.nav-link').addClass('active');
+    
+                return false; // Exit the loop once a match is found
+            }
+        });
+    });
+
+    function scrollToActiveItem() {
+        var activeItem = $('.nav-treeview .nav-link.active');
+        if (activeItem.length) {
+            var sidebar = $('.main-sidebar');
+            var scrollTop = activeItem.offset().top - (sidebar.height() / 2);
+            sidebar.animate({scrollTop: scrollTop});
+        }
+    }
+
+    window.addEventListener('load', scrollToActiveItem);
+   
+    $.ajaxSetup({
+        headers: {
+            "X-CSRFToken": $('[name=csrfmiddlewaretoken]').val()
+          }
+    });
+
+    $.widget.bridge('uibutton', $.ui.button);
+   
+
+
+    // for navbar toggle, sidebar collapse and show using sidebar state in localstorage
+    if (Boolean(sessionStorage.getItem("sidebar-toggle-collapsed"))) {
+        $("body").addClass('sidebar-collapse')
+    }
+
+    $('.toggle-navbar').click(function() {
+        event.preventDefault();
+        
+        if (Boolean(sessionStorage.getItem("sidebar-toggle-collapsed"))) {
+        sessionStorage.setItem("sidebar-toggle-collapsed", "");
+        } else {
+        sessionStorage.setItem("sidebar-toggle-collapsed", "1");
+        }
+    
+  });
+
+
+</script>
+<script src="{% static 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js' %} "></script>
+
+
+{% block datatable_js %}{% endblock %}
+
+<script src="{% static 'admin-lte/dist/js/adminlte.min.js' %}"></script>
+<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'main/js/noty.js' %}"></script>
+<script src="{% static 'main/js/sweetalert.min.js' %}"></script>
+<script src="{% static 'main/js/nepali.datepicker.v3.5.min.js' %}"></script>
+<script src="{% static 'main/js/jquery-validation.min.js' %}"></script>
+<script src="{% static 'main/js/loadingoverlay.min.js' %}"></script>
+<script src="{% static 'main/js/bootstrap-waitingfor.min.js' %}"></script>
+<script src="{% static 'main/js/custom.js' %}"></script>
+
+{% endblock %}
